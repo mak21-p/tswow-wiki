@@ -14,7 +14,7 @@ This will require us to learn a few important concepts about **types** and **val
 
 We will start by presenting a naive extension of our previous script that attempts to send a message to our current selection. The function we call to get a players selection is `.GetSelection()`, so we might end up with the following code.
 
-<img class="mi ili" src="https://i.imgur.com/No5KiNg.png">
+<img class="mi ili" src="https://i.imgur.com/No5KiNg.png" />
 
 As you can see, this causes VSCodium to complain that this code is not valid. This is becase we haven't made sure that the players target is really a player yet, and to know how to do that we need to learn a little about _Type Hierarchies_.
 
@@ -31,11 +31,11 @@ It is not necessary to understand all the aspects of type hierarchies to use liv
 The root object types used by all 'object' entities in the game is the `Object` type, and it has (for our purposes) the following important child types:
 
 - `Object`
-    - `WorldObject`: Anything that can be spawned in the world
-        - `GameObject`: Doors, chests, buttons, chairs etc
-        - `Unit`: Anything that can walk around and enter combat
-            - `Player`: Player characters logged into the game
-            - `Creature`: Any unit that is not a player
+  - `WorldObject`: Anything that can be spawned in the world
+    - `GameObject`: Doors, chests, buttons, chairs etc
+    - `Unit`: Anything that can walk around and enter combat
+      - `Player`: Player characters logged into the game
+      - `Creature`: Any unit that is not a player
 
 What it means for a type to be a child type of other types is that they always get all the same methods as the parent. For example, the `Unit` type has a `GetName` method, which means that all players and creatures also has a `GetName` method.
 
@@ -49,25 +49,24 @@ In order to send a message to the player selection, we need to _cast_ it into a 
 
 ```ts
 export function Main(events: TSEvents) {
-    events.Player.OnCommand((player,command,found)=>{
-        if(command.get() == "ping")
-        {
-            player.GetSelection().ToPlayer().SendBroadcastMessage(` selection pong!`);
-            found.set(true);
-        }
-    })
+  events.Player.OnCommand((player, command, found) => {
+    if (command.get() == "ping") {
+      player.GetSelection().ToPlayer().SendBroadcastMessage(` selection pong!`);
+      found.set(true);
+    }
+  });
 }
 ```
 
 This code will actually compile and even work if we try it ingame with a player selected.
 
-<img class="mi ili" src="https://i.imgur.com/MmmB7KL.png">
+<img class="mi ili" src="https://i.imgur.com/MmmB7KL.png" />
 
 However, if we have a **Creature** selected, or nothing at all, we'll get an unpleasant surprise:
 
-<img class="mi ili" src="https://i.imgur.com/cEgWnO5.png">
+<img class="mi ili" src="https://i.imgur.com/cEgWnO5.png" />
 
-<img class="mi ili" src="https://i.imgur.com/FnoRumm.png">
+<img class="mi ili" src="https://i.imgur.com/FnoRumm.png" />
 
 ## Validity Checking
 
@@ -77,25 +76,21 @@ To do this, we need to save them into a variable, and simply try out their `IsNu
 
 ```ts
 export function Main(events: TSEvents) {
-    events.Player.OnCommand((player,command,found)=>{
-        if(command.get() == "ping")
-        {
-            let selection = player.GetSelection().ToPlayer();
-            if(!selection.IsNull())
-            {
-                selection.SendBroadcastMessage(`selection pong!`);
-            }
-            else
-            {
-                player.SendBroadcastMessage(`You're not selecting a player!`)
-            }
-            found.set(true);
-        }
-    })
+  events.Player.OnCommand((player, command, found) => {
+    if (command.get() == "ping") {
+      let selection = player.GetSelection().ToPlayer();
+      if (!selection.IsNull()) {
+        selection.SendBroadcastMessage(`selection pong!`);
+      } else {
+        player.SendBroadcastMessage(`You're not selecting a player!`);
+      }
+      found.set(true);
+    }
+  });
 }
 ```
 
 This is much better, and we now have a secure script that won't crash the server regardless of what we try to throw at it.
 
-<img class="mi ili" src="https://i.imgur.com/yQLBe18.png">
-<img class="mi ili" src="https://i.imgur.com/edUvc3F.png">
+<img class="mi ili" src="https://i.imgur.com/yQLBe18.png" />
+<img class="mi ili" src="https://i.imgur.com/edUvc3F.png" />

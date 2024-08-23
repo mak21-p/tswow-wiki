@@ -27,7 +27,7 @@ It is not possible to use code written in datascripts inside livescripts and vic
 
 Enabling livescripts for our module is as easy as it was for datascripts, we'll simply create a folder inside our module called "livescripts".
 
-<img class="mi ili" src="https://i.imgur.com/MIyYzoK.png">
+<img class="mi ili" src="https://i.imgur.com/MIyYzoK.png" />
 
 Just like when we created the datascripts folder, if we have TSWoW running we should notice that it instantly populates this folder with the basic boilerplate we need.
 
@@ -35,7 +35,7 @@ The file we are interested in here is `livescripts.ts`:
 
 ```ts
 export function Main(events: TSEvents) {
-    // Register your events here!
+  // Register your events here!
 }
 ```
 
@@ -55,9 +55,7 @@ A **mutable reference** is a type of variable that we can change the value of, w
 
 ```ts
 export function Main(events: TSEvents) {
-    events.Player.OnCommand((player,command,found)=>{
-
-    })
+  events.Player.OnCommand((player, command, found) => {});
 }
 ```
 
@@ -69,12 +67,10 @@ This is done by accessing the mutable reference `command` with the `.get` method
 
 ```ts
 export function Main(events: TSEvents) {
-    events.Player.OnCommand((player,command,found)=>{
-        if(command.get() == "ping")
-        {
-
-        }
-    })
+  events.Player.OnCommand((player, command, found) => {
+    if (command.get() == "ping") {
+    }
+  });
 }
 ```
 
@@ -82,12 +78,11 @@ To send a message back to the player, we will use the method `SendBroadcastMessa
 
 ```ts
 export function Main(events: TSEvents) {
-    events.Player.OnCommand((player,command,found)=>{
-        if(command.get() == "ping")
-        {
-            player.SendBroadcastMessage(`pong!`)
-        }
-    })
+  events.Player.OnCommand((player, command, found) => {
+    if (command.get() == "ping") {
+      player.SendBroadcastMessage(`pong!`);
+    }
+  });
 }
 ```
 
@@ -95,13 +90,12 @@ Finally, if the command matched what we expected, we want to inform the underlyi
 
 ```ts
 export function Main(events: TSEvents) {
-    events.Player.OnCommand((player,command,found)=>{
-        if(command.get() == "ping")
-        {
-            player.SendBroadcastMessage(`pong!`)
-            found.set(true);
-        }
-    })
+  events.Player.OnCommand((player, command, found) => {
+    if (command.get() == "ping") {
+      player.SendBroadcastMessage(`pong!`);
+      found.set(true);
+    }
+  });
 }
 ```
 
@@ -109,8 +103,8 @@ This is all the code we will need to get our simple command to work in game, and
 
 As opposed to datascripts, livescripts can be swapped into a running server without restarting, so if we already had the game open we can try it out immediately once the scripts have finished compiling.
 
-<img class="mi ili" src="https://i.imgur.com/DY86xAy.png">
+<img class="mi ili" src="https://i.imgur.com/DY86xAy.png" />
 
-<img class="mi ili" src="https://i.imgur.com/7qQ8XO2.png">
+<img class="mi ili" src="https://i.imgur.com/7qQ8XO2.png" />
 
-<img class="mi ili" src="https://i.imgur.com/FnloNlx.png">
+<img class="mi ili" src="https://i.imgur.com/FnloNlx.png" />

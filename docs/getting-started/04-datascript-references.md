@@ -31,7 +31,7 @@ Let's look at `Fireball` as an example. It consists of two effects:
 1. Dealing immediate fire damage
 2. Dealing periodic fire damage over 8 seconds
 
-<img class="mi ili" src="https://i.imgur.com/brAu677.png">
+<img class="mi ili" src="https://i.imgur.com/brAu677.png" />
 
 While spell effects are separate entities from Spells themselves, they are _local_ to the spell, and cannot be referenced by multiple spells at the same time.
 
@@ -39,7 +39,7 @@ While spell effects are separate entities from Spells themselves, they are _loca
 
 The Spell itself also does not define much about how it looks, referred to as the spells `Visuals`. Spell Visuals are instead themselves separate entities that are just _referenced_ by the spell ID, which is commonly used to define the same visuals for spells of different ranks.
 
-<img class="mi ili" src="https://i.imgur.com/cU7Hfov.png">
+<img class="mi ili" src="https://i.imgur.com/cU7Hfov.png" />
 
 To complicate things further, spell visuals consists of various components to define the spells visuals at different stages, called `spell visual kits`. These spell visual kits are themselves separate entities that _also be referenced by multiple spell visuals_.
 
@@ -49,7 +49,7 @@ Fireball visuals use 3 spell visual kits:
 - CastKit: Defines visuals and animations for the **caster** when the castbar finishes
 - ImpactKit: Defines visuals and animations for the **target** of the spell when it hits them.
 
-<img class="mi ili" src="https://i.imgur.com/JV9qpy8.png">
+<img class="mi ili" src="https://i.imgur.com/JV9qpy8.png" />
 
 ## Creating a Fireball-like spell
 
@@ -63,9 +63,9 @@ This won't create a very aesthetically pleasing or interesting spell, but it wil
 
 ### Finding the Parent ID
 
-Our first step is to figure out the ID of a normal fireball spell to use as a basis. We could do this either via [datascript queries](./03-datasript-queries) or by creating a mage character and inspecting the fireball spell we learn on creation. As we do, we'll find that the ID we're looking for is `133`.
+Our first step is to figure out the ID of a normal fireball spell to use as a basis. We could do this either via [datascript queries](./datascript-queries) or by creating a mage character and inspecting the fireball spell we learn on creation. As we do, we'll find that the ID we're looking for is `133`.
 
-<img class="mi ili" src="https://i.imgur.com/KfC5bqs.png">
+<img class="mi ili" src="https://i.imgur.com/KfC5bqs.png" />
 
 ### Basics
 
@@ -74,12 +74,12 @@ By using the parent ID, we can easily create our own functional fireball spell u
 ```ts
 import { std } from "wow/wotlk";
 
-const MY_SPELL = std.Spells
-    .create('my-mod','my-fireball',133)
-    .Name.enGB.set('My Custom Fireball')
+const MY_SPELL = std.Spells.create("my-mod", "my-fireball", 133).Name.enGB.set(
+  "My Custom Fireball"
+);
 ```
 
-<img class = "mi ili" src="https://i.imgur.com/j9hAbd9.png">
+<img class = "mi ili" src="https://i.imgur.com/j9hAbd9.png" />
 
 ### Changing Damage Values
 
@@ -88,13 +88,13 @@ The effects of a spell can be accessed through the `Effects` property, and we ca
 ```ts
 import { std } from "wow/wotlk";
 
-const MY_SPELL = std.Spells
-    .create('my-mod','my-fireball',133)
-    .Name.enGB.set('My Custom Fireball')
+const MY_SPELL = std.Spells.create("my-mod", "my-fireball", 133).Name.enGB.set(
+  "My Custom Fireball"
+);
 
 // we use objectifyPlain here because the output
 // is easier to understand for beginners
-console.log(MY_SPELL.Effects.objectifyPlain())
+console.log(MY_SPELL.Effects.objectifyPlain());
 ```
 
 Running this code shows us clearly what effects does what in this spell:
@@ -107,14 +107,14 @@ Running this code shows us clearly what effects does what in this spell:
 [
   {
     ItemType: 0,
-    Aura: 'NONE',
-    Type: 'SCHOOL_DAMAGE',
-    Mechanic: 'NONE',
+    Aura: "NONE",
+    Type: "SCHOOL_DAMAGE",
+    Mechanic: "NONE",
     PointsBase: { effective: 14, stored: 13 },
     PointsDieSides: 9,
     PointsPerLevel: 0.6000000238418579,
     PointsPerCombo: 0,
-    ImplicitTargetA: 'UNIT_TARGET_ENEMY',
+    ImplicitTargetA: "UNIT_TARGET_ENEMY",
     ImplicitTargetB: 0,
     AuraPeriod: 0,
     MultipleValue: 0,
@@ -124,18 +124,18 @@ Running this code shows us clearly what effects does what in this spell:
     TriggerSpell: 0,
     ChainAmplitude: 1,
     BonusMultiplier: 0.12300000339746475,
-    ClassMask: []
+    ClassMask: [],
   },
   {
     ItemType: 0,
-    Aura: 'PERIODIC_DAMAGE',
-    Type: 'APPLY_AURA',
-    Mechanic: 'NONE',
+    Aura: "PERIODIC_DAMAGE",
+    Type: "APPLY_AURA",
+    Mechanic: "NONE",
     PointsBase: { effective: 1, stored: 0 },
     PointsDieSides: 1,
     PointsPerLevel: 0,
     PointsPerCombo: 0,
-    ImplicitTargetA: 'UNIT_TARGET_ENEMY',
+    ImplicitTargetA: "UNIT_TARGET_ENEMY",
     ImplicitTargetB: 0,
     AuraPeriod: 2000,
     MultipleValue: 0,
@@ -145,9 +145,9 @@ Running this code shows us clearly what effects does what in this spell:
     TriggerSpell: 0,
     ChainAmplitude: 1,
     BonusMultiplier: 0,
-    ClassMask: []
-  }
-]
+    ClassMask: [],
+  },
+];
 ```
 
 To modify an existing effect on the spell, we can use the `Effect.mod` method, which accepts an effect index, and then a _callback function_ that will allow us to modify the entity inside of.
@@ -159,19 +159,16 @@ The effect field we want to edit to change damage values is `PointsBase`, and is
 ```ts
 import { std } from "wow/wotlk";
 
-const MY_SPELL = std.Spells
-    .create('my-mod','my-fireball',133)
-    .Name.enGB.set('My Custom Fireball')
-    .Effects.mod(0,x=>x
-        .PointsBase.set(1007688)
-    )
+const MY_SPELL = std.Spells.create("my-mod", "my-fireball", 133)
+  .Name.enGB.set("My Custom Fireball")
+  .Effects.mod(0, (x) => x.PointsBase.set(1007688));
 ```
 
 Everything inside of the parantheses starting from `mod(` affects the effect, while anything after the last `)` again operates on the spell object itself.
 
 If we try out this spell in-game we should see that it now deals a ridiculous amount of damage.
 
-<img class="mi ili" src="https://i.imgur.com/rV9zmdH.png">
+<img class="mi ili" src="https://i.imgur.com/rV9zmdH.png" />
 
 ### Adding new effects
 
@@ -186,22 +183,17 @@ For this effect, we need to set up a `Type` and an `Aura` on our effect to slow 
 ```ts
 import { std } from "wow/wotlk";
 
-const MY_SPELL = std.Spells
-    .create('my-mod','my-fireball',133)
-    .Name.enGB.set('My Custom Fireball')
-    .Effects.mod(0,x=>x
-        .PointsBase.set(1)
-    )
-    .Effects.addMod(x=>x
-        .Type.APPLY_AURA.set()
-        .Aura.MOD_DECREASE_SPEED.set()
-        .PercentBase.set(-90)
-    )
+const MY_SPELL = std.Spells.create("my-mod", "my-fireball", 133)
+  .Name.enGB.set("My Custom Fireball")
+  .Effects.mod(0, (x) => x.PointsBase.set(1))
+  .Effects.addMod((x) =>
+    x.Type.APPLY_AURA.set().Aura.MOD_DECREASE_SPEED.set().PercentBase.set(-90)
+  );
 ```
 
 If we check the spell ingame, we should see that the target creature can barely walk towards us while the effect is active
 
-<img class="mi ili" src="https://i.imgur.com/w63reNT.png">
+<img class="mi ili" src="https://i.imgur.com/w63reNT.png" />
 
 ### Modifying Visuals
 
@@ -222,19 +214,13 @@ Since we're only trying to create a test spell to understand spells better, we w
 ```ts
 import { std } from "wow/wotlk";
 
-const MY_SPELL = std.Spells
-    .create('my-mod','my-fireball',133)
-    .Name.enGB.set('My Custom Fireball')
-    .Effects.mod(0,x=>x
-        .PointsBase.set(1)
-    )
-    .Effects.addMod(x=>x
-        .Type.APPLY_AURA.set()
-        .Aura.MOD_DECREASE_SPEED.set()
-        .PercentBase.set(-42)
-    )
-    .Visual.modRefCopy(x=>x
-    )
+const MY_SPELL = std.Spells.create("my-mod", "my-fireball", 133)
+  .Name.enGB.set("My Custom Fireball")
+  .Effects.mod(0, (x) => x.PointsBase.set(1))
+  .Effects.addMod((x) =>
+    x.Type.APPLY_AURA.set().Aura.MOD_DECREASE_SPEED.set().PercentBase.set(-42)
+  )
+  .Visual.modRefCopy((x) => x);
 ```
 
 ### Spell Visual Animations
@@ -244,22 +230,18 @@ Spell visual animations are stored on the SpellVisualKits, and for the kit used 
 ```ts
 import { std } from "wow/wotlk";
 
-const MY_SPELL = std.Spells
-    .create('my-mod','my-fireball',133)
-    .Name.enGB.set('My Custom Fireball')
-    .Effects.mod(0,x=>x
-        .PointsBase.set(1)
+const MY_SPELL = std.Spells.create("my-mod", "my-fireball", 133)
+  .Name.enGB.set("My Custom Fireball")
+  .Effects.mod(0, (x) => x.PointsBase.set(1))
+  .Effects.addMod((x) =>
+    x.Type.APPLY_AURA.set().Aura.MOD_DECREASE_SPEED.set().PercentBase.set(-42)
+  )
+  .Visual.modRefCopy((x) =>
+    x.PrecastKit.modRefCopy(
+      (y) => y
+      // Nested references!
     )
-    .Effects.addMod(x=>x
-        .Type.APPLY_AURA.set()
-        .Aura.MOD_DECREASE_SPEED.set()
-        .PercentBase.set(-42)
-    )
-    .Visual.modRefCopy(x=>x
-        .PrecastKit.modRefCopy(y=>y
-            // Nested references!
-        )
-    )
+  );
 ```
 
 The field we now want to edit on this visual kit is the `Animation` field, and we can choose any animation we want for some funky and strange effects, but i'll use the `SPELL_CAST_OMNI` effect to not get too funky.
@@ -267,27 +249,20 @@ The field we now want to edit on this visual kit is the `Animation` field, and w
 ```ts
 import { std } from "wow/wotlk";
 
-const MY_SPELL = std.Spells
-    .create('my-mod','my-fireball',133)
-    .Name.enGB.set('My Custom Fireball')
-    .Effects.mod(0,x=>x
-        .PointsBase.set(1)
-    )
-    .Effects.addMod(x=>x
-        .Type.APPLY_AURA.set()
-        .Aura.MOD_DECREASE_SPEED.set()
-        .PercentBase.set(-42)
-    )
-    .Visual.modRefCopy(x=>x
-        .PrecastKit.modRefCopy(y=>y
-            .Animation.SPELL_CAST_OMNI.set()
-        )
-    )
+const MY_SPELL = std.Spells.create("my-mod", "my-fireball", 133)
+  .Name.enGB.set("My Custom Fireball")
+  .Effects.mod(0, (x) => x.PointsBase.set(1))
+  .Effects.addMod((x) =>
+    x.Type.APPLY_AURA.set().Aura.MOD_DECREASE_SPEED.set().PercentBase.set(-42)
+  )
+  .Visual.modRefCopy((x) =>
+    x.PrecastKit.modRefCopy((y) => y.Animation.SPELL_CAST_OMNI.set())
+  );
 ```
 
 If we run this code, we should be able to see that our character is now using a different animation while charging up the spell:
 
-<img class="mi ili" src="https://i.imgur.com/K63rJo0.png">
+<img class="mi ili" src="https://i.imgur.com/K63rJo0.png" />
 
 ## Summary
 

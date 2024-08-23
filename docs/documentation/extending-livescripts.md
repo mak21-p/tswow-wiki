@@ -6,15 +6,15 @@ nav_order: 330
 
 # Extending Livescripts
 
-Adding new LiveScript events and functions is a fairly straightforward process once you've [built tswow from source](installation). Note that it is not possible to extend the livescripting API from a repack.
+Adding new LiveScript events and functions is a fairly straightforward process once you've [built tswow from source](../install/compiling.md). Note that it is not possible to extend the livescripting API from a repack.
 
 The LiveScript API classes can be found in the [tswow-core](https://github.com/tswow/tswow/tree/master/tswow-core) subproject. The `Public` folder contains public header files (such as `TSPlayer.h`), while the `Private` folder contains implementations (such as `TSPlayer.cpp) that contain actual implementations for livescript functions.
 
 For all livescript extensions, it is important that public header files do **not** refer to internal trinitycore headers, because those headers are by design not available when building livescripts. If you need to refer to internal trinitycore types, they must only be available as forward declarations in your public header files, and only actually imported in the private implementations.
 
-## Adding a method to a TS* class
+## Adding a method to a TS\* class
 
-TS* classes refers to classes such as `TSPlayer`, `TSUnit`, TSMap` that wrap internal trinitycore classes such as `Player`, `Unit` and `Map`.
+TS\* classes refers to classes such as `TSPlayer`, `TSUnit`, TSMap`that wrap internal trinitycore classes such as`Player`, `Unit`and`Map`.
 
 For example, let's pretend that we want to add the method `TSPlayer::SetLevel`. This method is already implemented, but is used here as a simple example.
 
@@ -31,6 +31,7 @@ For example, let's pretend that we want to add the method `TSPlayer::SetLevel`. 
   }
   ```
 - Finally, to make our method visible to livescripts, we must add a typescript declaration to `tswow-core/Public/global.d.ts`. We can find the "TSPlayer" class by searching for "interface TSPlayer" and simply add a line among the other methods declared for it:
+
   ```ts
   SetLevel(level: uint32): void
   ```
@@ -39,7 +40,7 @@ For example, let's pretend that we want to add the method `TSPlayer::SetLevel`. 
   ```c++
   LUA_FIELD(ts_player, TSPlayer, SetLevel);
   ```
-  _Note: for some classes, such as `TSUnit`, functions are actually added in `TSUnitLua.h` instead of `TSUnitLua.cpp`, just check where all the other methods are registered for your class if you're unsure where to place them.
+  \_Note: for some classes, such as `TSUnit`, functions are actually added in `TSUnitLua.h` instead of `TSUnitLua.cpp`, just check where all the other methods are registered for your class if you're unsure where to place them.
 
 We can now compile the core, and if all went well we should have a new livescript method available to our livescripts.
 
@@ -74,7 +75,7 @@ Arrays and Maps can be handled similarly, and you can find examples for how to c
 
 Lua has no concept of C++ optional arguments, so if we want to expose functions with optional arguments, we must create separate lua functions for each possible number of parameters.
 
-For example, let's pretend we want to add the made up function `TSPlayer::CallOptionalArguments(uint32 a = 0,uint32 b = 0)` to Lua. 
+For example, let's pretend we want to add the made up function `TSPlayer::CallOptionalArguments(uint32 a = 0,uint32 b = 0)` to Lua.
 
 First, we must add three declarations to the `TSPlayer` class in `TSPlayer.h` (and just like with the above section, make sure `TSLua` is a friend class):
 
@@ -115,7 +116,7 @@ You do not need to change anything else in `global.d.ts` or the original method 
 
 ## Adding a new LiveScript global function
 
-Global functions are registered very similar to TS* class methods, with the only difference that in their public declarations it is important to prefix their public header declaration with the `TS_GAME_API` (or aliased as `TC_GAME_API`):
+Global functions are registered very similar to TS\* class methods, with the only difference that in their public declarations it is important to prefix their public header declaration with the `TS_GAME_API` (or aliased as `TC_GAME_API`):
 
 ```c++
 TS_GAME_API void MyLivescriptFunction();
@@ -139,12 +140,14 @@ Let's pretend that we want to add a new player event "Player.OnLevelChanged". Th
   ```
   _Note that we avoid adding a separate argument for the **new** level, since this can already be accessed through the TSPlayer object itself_.
 - Now, we need to call this event from somewhere in the core itself. A good place for this event might be inside the `Player::GiveLevel` function inside `Player.cpp`. To fire this event, we need to make sure the `TSEvents.h` header itself is included, as well as any headers for the `TS*` classes that it expects. Then, we can fire the event using the `FIRE` macro, and make sure to convert all arguments to the `TS*` classes that the event expects:
+
   ```c++
   // somewhere inside Player::GiveLevel
-  
+
   // First argument is the event category, second is event name, and the rest are the event arguments.
   FIRE(Player,OnLevelChanged,TSPlayer(this),oldLevel)
   ```
+
 - Finally, to make this event available to livescripts we need to add typescript declaration to `tswow-core/Public/global.d.ts`. Events are found in class declarations inside the `_hidden` namespace, and we can find the Player event class by searching for `class Player<T>`:
   ```ts
   // somewhere in Player<T>
@@ -154,7 +157,7 @@ Let's pretend that we want to add a new player event "Player.OnLevelChanged". Th
   ```c++
   LUA_HANDLE(player_events, PlayerEvents, OnLevelChanged);
   ```
-We can now compile the core, and if all went well we should have a new event available to our livescripts.
+  We can now compile the core, and if all went well we should have a new event available to our livescripts.
 
 ### ID-bound events
 
@@ -218,11 +221,11 @@ MyMutableStringEvent(callback: (player: TSPlayer, value: TSMutableString) => voi
 ## Contributing Changes to TSWoW
 
 We are generally welcoming of proposed additions to our livescripting API, but contributions should follow some guidelines for us to accept them into our official repository:
- 
-- It is a good idea to discuss new additions with us before working on them, to make sure it's something we feel is useful for our users in general. This is especially true for larger additions such as completely new event categories or TS* classes.
+
+- It is a good idea to discuss new additions with us before working on them, to make sure it's something we feel is useful for our users in general. This is especially true for larger additions such as completely new event categories or TS\* classes.
 - Both events and functions should (with very few exceptions) always be available to both LiveScripts and Lua scripts, so adding a working Lua declaration is necessary.
 - Any Lua override functions should follow the conventions we use (be private in the class/having `TSLua` as a friend, have the `L` prefix and count from 0 and up for overloaded methods)
 - Events to id-bound categories should (with very few exceptions) always be id-bound as well.
-- Events and methods should have _some_ general usability, as in that someone else could realistically make use of the added functionality. 
+- Events and methods should have _some_ general usability, as in that someone else could realistically make use of the added functionality.
 - Events and methods should (with very few exceptions) not accept more parameters than necessary. If some event parameter can already be deduced or accessed from other parameters, it should not be added separately.
 - For class hierarchies, methods should (with very few exceptions) be added to the lowest common class possible (`Unit` methods should be added to `TSUnit`, not `TSPlayer`)

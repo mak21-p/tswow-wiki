@@ -1,9 +1,3 @@
----
-layout: default
-title: Modding Introduction
-nav_order: 1
----
-
 # Modding Introduction
 
 In this section, we will briefly explain how modding with TSWoW looks and feels like. There are no exercises here, just read it through and try to understand the basic concepts. When finished, you're not expected to understand **how** to create these types of mods, but simply know that they exist.
@@ -16,13 +10,13 @@ With TSWoW, we use the TypeScript programming language in the VSCodium editor to
 2. A code window where we can edit text files
 3. A terminal window where we can type in commands
 
-<img class="mi ili" src="https://i.imgur.com/28TQrpa.png">
+<img class="mi ili" src="https://i.imgur.com/28TQrpa.png"></img>
 
 ## Modules
 
 TSWoW is built around the concept of _modules_. A module is a folder that is placed inside the `modules` folder in your tswow installation and is used to contain scripts and assets that modifies the game in some way.
 
-<img class="mi ili" src="https://i.imgur.com/eianlcc.png">
+<img class="mi ili" src="https://i.imgur.com/eianlcc.png"></img>
 
 ## Mod Types
 
@@ -33,12 +27,13 @@ Modules can contain different types of _subfolders_ that are used to modify the 
 2. **assets**: folder that contains assets like 3D models, textures, music or world maps
 
 3. **datascrips**: special scripts used to generate _static game data_ such as Spells, Achievements, Items and Classes.
-    - For modding veterans: these scripts generate DBC and SQL data.
-    - Static means that this is game data that doesn't change while the game itself is running.
+
+   - For modding veterans: these scripts generate DBC and SQL data.
+   - Static means that this is game data that doesn't change while the game itself is running.
 
 4. **livescripts**: scripts that is running inside the server itself, allowing things like running code when player types in chat messages or engaging a boss.
 
-<img class="mi ili" src="https://i.imgur.com/PZAijnG.png">
+<img class="mi ili" src="https://i.imgur.com/PZAijnG.png"></img>
 
 ## DataScripts
 
@@ -49,15 +44,14 @@ Despite being a proper programming language, datascript often read more like con
 Here is an example datascript that creates a very simple spell:
 
 ```ts
-import { std } from 'wow/wotlk';
+import { std } from "wow/wotlk";
 
-std.Items
-    .create('my-mod','my-item')
-    .Name.enGB.set('My Item')
-    .Class.SWORD_1H.set()
-    .Damage.addPhysical(1007688,1007688)
-    .RequiredLevel.set(25)
-    .DisplayInfo.set(1542) // just a sword model id
+std.Items.create("my-mod", "my-item")
+  .Name.enGB.set("My Item")
+  .Class.SWORD_1H.set()
+  .Damage.addPhysical(1007688, 1007688)
+  .RequiredLevel.set(25)
+  .DisplayInfo.set(1542); // just a sword model id
 ```
 
 As you can see, it should be relatively straightforward what this code is doing, even if you can't fully follow the syntax just yet.
@@ -67,27 +61,24 @@ The power of datascripts is that they allow you to create content _procedurally_
 For example, if you wanted to create not one item, but 1 million items, datascripts make this trivial:
 
 ```ts
-import { std } from 'wow/wotlk';
+import { std } from "wow/wotlk";
 
-for(let i = 0; i < 1000000; ++i)
-{
-    std.Items
-        .create('my-mod',`my-item-${i}`)
-        .Name.enGB.set(`My Item #${i}`)
-        .Class.SWORD_1H.set()
-        .Damage.addPhysical(1007688,1007688)
-        .RequiredLevel.set(25)
-        .DisplayInfo.set(1542)
+for (let i = 0; i < 1000000; ++i) {
+  std.Items.create("my-mod", `my-item-${i}`)
+    .Name.enGB.set(`My Item #${i}`)
+    .Class.SWORD_1H.set()
+    .Damage.addPhysical(1007688, 1007688)
+    .RequiredLevel.set(25)
+    .DisplayInfo.set(1542);
 }
 ```
 
 TSWoW datascripts has first-class support for more types of entities in the game than any other tool in existence, including the types of entities that have traditionally been very difficult to create. For example, here is how easy it is to create a custom class using datascripts:
 
 ```ts
-std.Classes
-    .create('my-mod','my-class','MAGE')
-    .Name.enGB.set('Necromancer')
-    .Races.add(['HUMAN','NIGHTELF','ORC'])
+std.Classes.create("my-mod", "my-class", "MAGE")
+  .Name.enGB.set("Necromancer")
+  .Races.add(["HUMAN", "NIGHTELF", "ORC"]);
 ```
 
 This might seem effortless, but behind the scenes this script sets up for us automatically:
@@ -98,7 +89,7 @@ This might seem effortless, but behind the scenes this script sets up for us aut
 
 Yet, if we run this datascript in TSWoW, we would instantly get a new working (but barebones) class ingame:
 
-<img class = "mi ili" src="https://i.imgur.com/ON9RlmE.png">
+<img class = "mi ili" src="https://i.imgur.com/ON9RlmE.png"></img>
 
 ## Livescripts
 
@@ -108,10 +99,9 @@ LiveScripts are the types of scripts that TSWoW uses to create specific customiz
 
 ```ts
 export function Main(events: TSEvents) {
-    events.Player.OnSay((player,message)=>{
-        player.SendBroadcastMessage(
-            `You said "${message.get()}"!`);
-    });
+  events.Player.OnSay((player, message) => {
+    player.SendBroadcastMessage(`You said "${message.get()}"!`);
+  });
 }
 ```
 
@@ -134,4 +124,4 @@ The `asset` folder is what tswow uses to bundle game assets together with the re
 
 For modding veterans, the internal structure of the `assets` folder is identical to an MPQ archive, meaning that for example, the path of a custom map called `testmap` would be `modules/my_module/assets/world/maps/testmap`.
 
-<img class="mi ili" src="https://i.imgur.com/QLXo5Qk.png">
+<img class="mi ili" src="https://i.imgur.com/QLXo5Qk.png"></img>

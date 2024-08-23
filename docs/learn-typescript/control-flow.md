@@ -19,13 +19,12 @@ let my_bool_2: boolean = false;
 
 The most fundamental control flow statement is the `if` statement, that tells our program to do one thing **only** if a specific boolean value evaluates to `true`:
 
-
 [Example #4.0: If Statement](https://playcode.io/1456909)
+
 ```ts
 let my_bool: boolean = true;
-if (my_bool)
-{
-    console.log('My bool was true!')
+if (my_bool) {
+  console.log("My bool was true!");
 }
 ```
 
@@ -42,12 +41,9 @@ When we create an `if` statement, we can also follow it up with an `else` statem
 ```ts
 let my_bool: boolean = true;
 
-if (my_bool)
-{
+if (my_bool) {
   console.log("My bool was true!");
-}
-else
-{
+} else {
   console.log("My bool was false!");
 }
 ```
@@ -57,20 +53,16 @@ else
 If statements can also be followed by `else if` statements, that adds an additional boolean check if the previous path was not chosen:
 
 [Example #4.2: Else-if Statement](https://playcode.io/1456911)
+
 ```ts
 let my_bool: boolean = false;
 let my_other_bool: boolean = true;
 
-if (my_bool)
-{
+if (my_bool) {
   console.log("my_bool was true!");
-}
-else if(my_other_bool)
-{
+} else if (my_other_bool) {
   console.log("my_bool was false, but my_other_bool was true!");
-}
-else
-{
+} else {
   console.log("Both my_bool and my_other_bool were false!");
 }
 ```
@@ -78,25 +70,21 @@ else
 We can have as many else if statements as we want, but we can only have one `else` statement (try to think about why that is).
 
 [Example 4.3: Multiple Else-if Statements](https://playcode.io/1456914)
+
 ```ts
 let my_bool: boolean = false;
 let my_other_bool: boolean = false;
 let my_third_bool: boolean = true;
 
-if (my_bool)
-{
+if (my_bool) {
   console.log("my_bool was true!");
-}
-else if(my_other_bool)
-{
+} else if (my_other_bool) {
   console.log("my_bool was false, but my_other_bool was true!");
-}
-else if(my_third_bool)
-{
-  console.log("Both my_bool and my_other_bool were false, but my_third_bool was true!");
-}
-else
-{
+} else if (my_third_bool) {
+  console.log(
+    "Both my_bool and my_other_bool were false, but my_third_bool was true!"
+  );
+} else {
   console.log("all my bools were false!");
 }
 ```
@@ -112,12 +100,12 @@ Just like with arithmetic, there are boolean operators that can transform expres
 `==` is especially powerful, as it doesn't require that its operands are themselves booleans, but can be both `strings`, `numbers` or almost any other type. Even when its operands are not booleans, the expression resolves into a boolean value.
 
 [Example 4.4: The == Operator](https://playcode.io/1456929)
+
 ```ts
 let my_first_string = "a";
 let my_second_string = "b";
 
-if (my_first_string == my_second_string)
-{
+if (my_first_string == my_second_string) {
   console.log("The two strings are the same");
 }
 ```
@@ -134,18 +122,18 @@ _Assignment #4.0: Change the above code to print out a message when the two stri
 
 The `&&` operator is used to combine two boolean values into a single value that is only true if **both** the operands are also true. This operator is called the "and" operator.
 
-[Example #4.5: The && Operator]()
+[Example #4.5: The && Operator](https://playcode.io)
+
 ```ts
 let my_first_bool = true;
 let my_second_bool = false;
 
 // This line reads like "my_first_bool AND my_second_bool"
-if (my_first_bool && my_second_bool)
-{
-  console.log("Both my_first_bool and my_second_bool are true!")
+if (my_first_bool && my_second_bool) {
+  console.log("Both my_first_bool and my_second_bool are true!");
 }
 ```
 
 The `&&` operator has a sibling called `||`, which combines into a boolean value that is true if **either** of its operands are true. This operator is called the "or" operator.
 
-_Assignment #4.1: Change the above code to print out a message when either my\_first\_bool or my\_second\_bool are equal ([assignment](https://playcode.io/1456938)) ([solution](https://playcode.io/1456939))_
+_Assignment #4.1: Change the above code to print out a message when either my_first_bool or my_second_bool are equal ([assignment](https://playcode.io/1456938)) ([solution](https://playcode.io/1456939))_

@@ -17,8 +17,9 @@ Datascripts are executed in tswow with the `build data` command, which will load
 The standard entrypoint for datascripts is the file `datascripts/datascripts.ts`, but datascripts do not really need an entrypoint as the build system will automatically run every script file it can find.
 
 A very simple datascript that only prints out a message to the console when you `build data`:
+
 ```ts
-console.log("Hello world")
+console.log("Hello world");
 ```
 
 ## TSWoW Standard Library
@@ -26,7 +27,7 @@ console.log("Hello world")
 The tswow standard library (wow/wotlk) contains most of the useful tools that you will need when creating datascripts. Almost all of its tools are defined via a single interface that only requires one import in your scripts:
 
 ```ts
-import { std } from "wow/wotlk"
+import { std } from "wow/wotlk";
 ```
 
 ## Creating Entities
@@ -34,9 +35,9 @@ import { std } from "wow/wotlk"
 To create new entities, we typically use the `create` method on one of the substructs we can find through the std interface. Below is a basic example to create a new custom creature:
 
 ```ts
-import { std } from "wow/wotlk"
+import { std } from "wow/wotlk";
 
-std.CreatureTemplates.create('my-module','my-custom-creature')
+std.CreatureTemplates.create("my-module", "my-custom-creature");
 ```
 
 ## Loading Entities
@@ -44,10 +45,10 @@ std.CreatureTemplates.create('my-module','my-custom-creature')
 Loading existing entities instead uses the `load` method, also commonly found on substructs to `std`:
 
 ```ts
-import { std } from "wow/wotlk"
+import { std } from "wow/wotlk";
 
 // Loads creature template with id 25
-std.CreatureTemplates.load(25)
+std.CreatureTemplates.load(25);
 ```
 
 ## Modifying Entities
@@ -55,13 +56,12 @@ std.CreatureTemplates.load(25)
 Once we have created or loaded an entity, we can modify it using a special convention evolved from method-chaining that the early developers of tswow dubbed "cell-based programming". Before elaborating, a brief example of how this looks:
 
 ```ts
-import { std } from "wow/wotlk"
+import { std } from "wow/wotlk";
 
-std.CreatureTemplates
-    .create('my-module','my-creature')
-    .Name.enGB.set('My Creature')
-    .Level.set(10)
-    .Stats.ArmorMod.set(2)
+std.CreatureTemplates.create("my-module", "my-creature")
+  .Name.enGB.set("My Creature")
+  .Level.set(10)
+  .Stats.ArmorMod.set(2);
 ```
 
 In cell-based programming, we create data by accessing entities in a long method chain and modifying individual properties via "set" functions (or, sometimes, other functions). Once a property has been "set", the method chain always returns to the root entity again, and the process starts over. This allows a very efficient way to create data for many different types of entities in a way that almost just looks like a configuration or json file.
@@ -69,18 +69,18 @@ In cell-based programming, we create data by accessing entities in a long method
 Understanding how a cell-based method chain works can be a bit difficult at first, and some users prefer to ignore the technical details and assume the code does what it looks like it's doing, while others prefer to avoid looping back by storing created objects in a variable, as it makes the code look a little bit more like something you would normally expect in the language:
 
 ```ts
-import { std } from "wow/wotlk"
+import { std } from "wow/wotlk";
 
 // This looks a little more like "normal" TypeScript,
 // but is more verbose and cluttered.
 
-const MY_CREATURE = std.CreatureTemplates.create('my-module','my-creature')
+const MY_CREATURE = std.CreatureTemplates.create("my-module", "my-creature");
 
-MY_CREATURE.Name.enGB.set('My Creature')
+MY_CREATURE.Name.enGB.set("My Creature");
 
-MY_CREATURE.Level.set(10)
+MY_CREATURE.Level.set(10);
 
-MY_CREATURE.Stats.ArmorMod.set(2)
+MY_CREATURE.Stats.ArmorMod.set(2);
 ```
 
 ## Enums
@@ -88,10 +88,10 @@ MY_CREATURE.Stats.ArmorMod.set(2)
 Some values in the game can only take one of a few predetermined values. For example, Creatures can be one of a few predetermined `Types`, such as `UNDEAD`, `DEMON`, `HUMANOID`, `BEAST` and so on. These special types are known as `Enums`, and are commonly represented as a number in databases. TSWoW often offers convenient ways to write and read these using sensible names instead of raw numbers:
 
 ```ts
-std.CreatureTemplates.create('my-mod','my-creature')
-    // Changes the creature type to UNDEAD
-    // Note how enum values are commonly written in ALL_UPPERCASE.
-    .Type.UNDEAD.set()
+std.CreatureTemplates.create("my-mod", "my-creature")
+  // Changes the creature type to UNDEAD
+  // Note how enum values are commonly written in ALL_UPPERCASE.
+  .Type.UNDEAD.set();
 ```
 
 ## Masks and Flags
@@ -100,20 +100,21 @@ Enums can normally only take on one value at a time. A Creature cannot be both `
 
 _Masks_ are similar to enums in that they can represent a predetermined set of values, but contrary to enums can take on multiple such values at once.
 
-_note: In the database, masks are commonly represented as a single number just like enums. The technical details about how multiple discrete values can be stored in a single number isn't necessary to understand how to use masks in tswow, but for the curious reader wikipedia has a [good article on how masks/bitmasks work](https://en.wikipedia.org/wiki/Mask_(computing))._
+_note: In the database, masks are commonly represented as a single number just like enums. The technical details about how multiple discrete values can be stored in a single number isn't necessary to understand how to use masks in tswow, but for the curious reader wikipedia has a [good article on how masks/bitmasks work](https://en.wikipedia.org/wiki/Mask_(computing)).\_
 
 ### Flags
+
 Masks commonly implement on/off settings fields. Masks used in that way are commonly known as _Flags_. Generally, flags are initialized to be unset / false until enabled. For example, a spells `Attributes` field is a mask/flag value that allows specifying a large amount of individual on/off settings for spells:
 
 ```ts
 // Creates a spell and enables multiple flags
-std.Spells.create('my-mod','my-spell')
-    // Turns the spell into a passive spell that automatically applies
-    // any aura effects it contains.
-    .Attributes.IS_PASSIVE.set(true)
+std.Spells.create("my-mod", "my-spell")
+  // Turns the spell into a passive spell that automatically applies
+  // any aura effects it contains.
+  .Attributes.IS_PASSIVE.set(true)
 
-    // Hides the spell from the spellbook when taught.
-    .Attributes.IS_HIDDEN_IN_SPELLBOOK.set(true)
+  // Hides the spell from the spellbook when taught.
+  .Attributes.IS_HIDDEN_IN_SPELLBOOK.set(true);
 ```
 
 ### Classmasks and Racemasks
@@ -124,11 +125,11 @@ For example, ClassMasks can be applied to items to only allow certain classes to
 
 ```ts
 // Creates an item limited to human mages, priests and warlocks
-std.Items.create('my-mod','my-item')
-    .ClassMask.PRIEST.set(true)
-    .ClassMask.MAGE.set(true)
-    .ClassMask.WARLOCK.set(true)
-    .RaceMask.HUMAN.set(true)
+std.Items.create("my-mod", "my-item")
+  .ClassMask.PRIEST.set(true)
+  .ClassMask.MAGE.set(true)
+  .ClassMask.WARLOCK.set(true)
+  .RaceMask.HUMAN.set(true);
 ```
 
 ### Set/Add
@@ -137,40 +138,41 @@ An alternative convention to set masks is to use `set/add` on the mask object it
 
 ```ts
 // Does the same thing as the previous example
-std.Items.create('my-mod','my-item')
-    .ClassMask.set(['PRIEST','MAGE','WARLOCK'])
-    .RaceMask.set(['HUMAN'])
+std.Items.create("my-mod", "my-item")
+  .ClassMask.set(["PRIEST", "MAGE", "WARLOCK"])
+  .RaceMask.set(["HUMAN"]);
 ```
 
 Similarly, we can call `remove` to disable multiple values at the same time:
 
 ```ts
-std.Items.create('my-mod','my-item')
-    .ClassMask.set(['PRIEST','MAGE','WARLOCK']) // priest + mage + lock enabled
-    .ClassMask.remove(['PRIEST'])               // mage + lock enabled
+std.Items.create("my-mod", "my-item")
+  .ClassMask.set(["PRIEST", "MAGE", "WARLOCK"]) // priest + mage + lock enabled
+  .ClassMask.remove(["PRIEST"]); // mage + lock enabled
 ```
 
 **Important**: There is an important difference between `set` and `add` when called on the mask object directly:
 
 ```ts
-std.Items.create('my-mod','my-item')
-    .ClassMask.PRIEST.set(true) // priests enabled
-    .ClassMask.MAGE.set(true)   // priests + mages enabled
-    .ClassMask.add(['WARLOCK']) // priests + mages + warlocks enabled
+std.Items.create("my-mod", "my-item")
+  .ClassMask.PRIEST.set(true) // priests enabled
+  .ClassMask.MAGE.set(true) // priests + mages enabled
+  .ClassMask.add(["WARLOCK"]) // priests + mages + warlocks enabled
 
-    .ClassMask.set(['WARRIOR']) // only warrior is now enabled,
-                                // because "set" overwrites any
-                                // previous data.
+  .ClassMask.set(["WARRIOR"]); // only warrior is now enabled,
+// because "set" overwrites any
+// previous data.
 ```
 
 ### Raw manipulation
+
 If you are comfortable writing your own bitmasks, it is still possible to set mask values by raw numbers. It is also possible to specify a second argument to specify how the input number should be merged with the existing value:
 
 ```ts
-std.Items.create('my-mod','my-item')
-    .ClassMask.set(0x1|0x2)       // warrior + paladin enabled
-    .ClassMask.set(0x1|0x4,'AND') // warrior enabled
-    .ClassMask.set(0x4,'OR')      // warrior + hunter enabled
+std.Items.create("my-mod", "my-item")
+  .ClassMask.set(0x1 | 0x2) // warrior + paladin enabled
+  .ClassMask.set(0x1 | 0x4, "AND") // warrior enabled
+  .ClassMask.set(0x4, "OR"); // warrior + hunter enabled
 ```
 
 ## Refs
@@ -187,7 +189,7 @@ Refs are simply numeric ids stored on an entity, and calling `get/set` on them w
 
 ```ts
 // Loads spell with id 133 (Firebolt rank 1)
-const spell = std.Spells.load(133)
+const spell = std.Spells.load(133);
 
 // Sets the visual reference to 0 (no reference = spell has no visuals)
 spell.Visual.set(0);
@@ -204,15 +206,15 @@ console.log(spell.Visual.get());
 Calling `getRef()` on a reference will return the referenced entity itself, rather than the reference id. This means you can modify entities across references without externally loading the referenced entity:
 
 ```ts
-import { std } from "wow/wotlk"
+import { std } from "wow/wotlk";
 
-const spell = std.Spells.load(133)
+const spell = std.Spells.load(133);
 
 // Returns the SpellVisual referenced by spell 133
 const visual = spell.Visual.getRef();
 
 // Changes the missile model of this spell visual
-visual.Missile.Model.setSimple('Spells\\Shadowbolt_Missile.mdx')
+visual.Missile.Model.setSimple("Spells\\Shadowbolt_Missile.mdx");
 ```
 
 One issue of `getRef` (and references in general) is that we don't really know what other entities might reference it. In the example of spells, all ranks of Firebolt (including those cast by monsters) all reference the exact same spell visual, meaning that if we use `getRef` on one spell to modify the reference, it will change it not just for our own spell, but for every single spell that reference it.
@@ -226,16 +228,15 @@ _A general rule of thumb is to only ever use `getRef` when **reading** data from
 An alternative convention to using `getRef/getRefCopy` to modify references is to use `modRef/modRefCopy`, which instead of returning the referenced entity accepts a callback that receives it. This allows modifying referenced objects without breaking cell-based method chains:
 
 ```ts
-import { std } from "wow/wotlk"
+import { std } from "wow/wotlk";
 
 std.Spells.load(133)
-    .Name.enGB.set('New Firebolt spell')
-    .Visual.modRefCopy(visual=>{
-        visual.Missile.Model
-            .setSimple('Spells\\Shadowbolt_Missile.mdx')
-    })
-    // outside of the callback, we are still modifying the Spell
-    .Power.setMana(100)
+  .Name.enGB.set("New Firebolt spell")
+  .Visual.modRefCopy((visual) => {
+    visual.Missile.Model.setSimple("Spells\\Shadowbolt_Missile.mdx");
+  })
+  // outside of the callback, we are still modifying the Spell
+  .Power.setMana(100);
 ```
 
 _You should almost always prefer `modRefCopy` to `modRef`_
@@ -251,9 +252,9 @@ Some entities in the game contain arrays of other entities. One such example is 
 Example of various ways to access array entries (using `Spell#Effects`):
 
 ```ts
-import { std } from "wow/wotlk"
+import { std } from "wow/wotlk";
 
-const spell = std.Spells.create('my-mod','my-new-spell')
+const spell = std.Spells.create("my-mod", "my-new-spell");
 
 // Adds a new spell effect (maximum of 3 per spell)
 const eff = spell.Effects.addGet();
@@ -264,14 +265,14 @@ const oldEff = spell.Effects.get(0);
 oldEff.Type.SCHOOL_DAMAGE.set();
 
 // Adds a new spell effect and modifies it in a callback
-spell.Effects.addMod((e)=>{
-    e.Type.SCHOOL_DAMAGE.set();
-})
+spell.Effects.addMod((e) => {
+  e.Type.SCHOOL_DAMAGE.set();
+});
 
 // Modifies an existing spell effect in a callback
-spell.Effects.mod(0, (e)=>{
-    e.Type.SCHOOL_DAMAGE.set()
-})
+spell.Effects.mod(0, (e) => {
+  e.Type.SCHOOL_DAMAGE.set();
+});
 ```
 
 ### One-To-Many Relationships
@@ -283,11 +284,11 @@ Example of various ways to access one-to-many entities:
 ```ts
 // Makes spellid 133 (Firebolt rank 1) learnable
 // through the fishing skill for druids
-const spell = std.Spells.load(133)
-let sla = spell.SkillLines.addGet()
+const spell = std.Spells.load(133);
+let sla = spell.SkillLines.addGet();
 sla.SkillLine.set(356); // skilline 356 = fishing
-sla.ClassMask.set(['DRUID'])
-sla.AcquireMethod.TRAINER.set()
+sla.ClassMask.set(["DRUID"]);
+sla.AcquireMethod.TRAINER.set();
 ```
 
 ## Building data
@@ -304,8 +305,8 @@ The `build data` command comes with a couple of useful flags:
 
 - `--rebuild`: Will rebuild the entire destination `world` database, which is sometimes necessary to clean out changes to existing entities in the game. This is a slow operation, and should only be used when you really find old game data.
 
-
 ## Dirty database
+
 TSWoW is a migration system that expects users to continuously execute their scripts to update the world state.
 
 To achieve this, datascripts separates the **input** data that it reads from the **output** data that it writes. For DBC, this means tswow **reads** from one set of DBC files and **writes** to another set. For SQL, it means tswow **reads** from one world database and **writes** to another.
@@ -315,15 +316,17 @@ Most data that tswow builds is completely rewritten and undone on each execution
 ### Modifying an entity in the game and removing the modification:
 
 First build:
-```ts
-import { std } from "wow/wotlk"
 
-std.CreatureTemplates.load(25).Name.enGB.set('Hello');
+```ts
+import { std } from "wow/wotlk";
+
+std.CreatureTemplates.load(25).Name.enGB.set("Hello");
 ```
 
 Second build:
+
 ```ts
-import { std } from "wow/wotlk"
+import { std } from "wow/wotlk";
 
 //std.CreatureTemplates.load(25).Name.enGB.set('Hello');
 ```
@@ -336,7 +339,7 @@ The graphical interface in the game are implemented using Lua and XML files. The
 
 - Replacing existing files by overriding them in your mods `assets` directory.
 
-- Creating an [addon](../addons/)
+- Creating an [addon](./addons/)
 
 - LUAXML manipulations in datascripts.
 
@@ -347,24 +350,26 @@ For files that need to be accessed by multiple modules, or that collide with cus
 This can be done via the `std.LUAXML` interface. Through this interface, we can either `replace` lines, or insert values `before` or `after` a line matching a regular expression.
 
 ```ts
-import { std } from "wow/wotlk"
+import { std } from "wow/wotlk";
 
-const file = std.LUAXML.file('Interface/GlueXML/GlueStrings.lua')
-file.replace(/RACE_INFO_BLOODELF =/,'RACE_INFO_BLOODELF = "Custom blood elf description";')
-file.before(/RACE_INFO_BLOODELF/, '-- Comment before blood elf description')
-file.after(/RACE_INFO_BLOODELF/,  '-- Comment after blood elf description')
+const file = std.LUAXML.file("Interface/GlueXML/GlueStrings.lua");
+file.replace(
+  /RACE_INFO_BLOODELF =/,
+  'RACE_INFO_BLOODELF = "Custom blood elf description";'
+);
+file.before(/RACE_INFO_BLOODELF/, "-- Comment before blood elf description");
+file.after(/RACE_INFO_BLOODELF/, "-- Comment after blood elf description");
 ```
 
 To allow multiple edits targeting the same tags or line numbers, edits are stored and not applied until all scripts have finished executing. It is also possible to access a previously made edit and change its text to avoid adding multiple edits to a single line:
 
 ```ts
-const file = std.LUAXML.file('Interface/GlueXML/GlueStrings.lua')
+const file = std.LUAXML.file("Interface/GlueXML/GlueStrings.lua");
 
-const blood_elf_description =
-    file.replace(
-          /RACE_INFO_BLOODELF = /
-        , `RACE_INFO_BLOODELF = "Your description here"`
-    )
+const blood_elf_description = file.replace(
+  /RACE_INFO_BLOODELF = /,
+  `RACE_INFO_BLOODELF = "Your description here"`
+);
 blood_elf_description.text = `RACE_INFO_BLOODELF = "My description"`;
 ```
 
@@ -377,29 +382,28 @@ Do you hate having to switch between datascripts and livescripts and spamming ou
 InlineScripts is a new API to write a livescripts _inline_ with your datascripts. A simple example:
 
 ```ts
-import { std } from "wow/wotlk"
+import { std } from "wow/wotlk";
 
 // This is a normal datascript
-std.Spells.create('my-module','my-spell')
-    .Name.enGB.set('My Spell')
-    .CastTime.setSimple(1000)
-    .Cooldown.set(1000)
-    .InlineScripts.OnCast((spell)=>{
-        // now, we're inside a livescript!
-        if(spell.GetCaster().IsPlayer()) {
-            spell.GetCaster().ToPlayer()
-                .SendBroadcastMessage(`You cast "My Spell"!`)
-        }
-    })
+std.Spells.create("my-module", "my-spell")
+  .Name.enGB.set("My Spell")
+  .CastTime.setSimple(1000)
+  .Cooldown.set(1000)
+  .InlineScripts.OnCast((spell) => {
+    // now, we're inside a livescript!
+    if (spell.GetCaster().IsPlayer()) {
+      spell.GetCaster().ToPlayer().SendBroadcastMessage(`You cast "My Spell"!`);
+    }
+  });
 ```
 
 It is also possible to register non id-bound events through InlineScripts:
 
 ```ts
-import { std } from "wow/wotlk"
+import { std } from "wow/wotlk";
 
-std.InlineScripts.Player.OnSay((player, message)=>{
-    player.SendBroadcastMessage(`You said: ${message.get()}`);
+std.InlineScripts.Player.OnSay((player, message) => {
+  player.SendBroadcastMessage(`You said: ${message.get()}`);
 });
 ```
 

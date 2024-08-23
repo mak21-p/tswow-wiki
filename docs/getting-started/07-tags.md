@@ -8,7 +8,7 @@ nav_order: 7
 
 While livescripts and datascripts cannot communicate directly, sometimes it is useful to be able to reference entities created in datascripts from livescripts, especially for attaching events to specific entities.
 
-In this tutorial, we will learn how to attach a livescript to the spell we created in the earlier [datascript tutorial about spells](./04-datascript-references).
+In this tutorial, we will learn how to attach a livescript to the spell we created in the earlier [datascript tutorial about spells](./datascript-references).
 
 ## ID-bound Livescript Events
 
@@ -22,13 +22,12 @@ If we wanted to attach an event to the builtin Fireball spell, we could use code
 
 ```ts
 export function Main(events: TSEvents) {
-    events.Spell.OnCast(133,(spell)=>{
-        let player = spell.GetCaster().ToPlayer();
-        if(player)
-        {
-            player.SendBroadcastMessage(`Hello from fireball!`)
-        }
-    })
+  events.Spell.OnCast(133, (spell) => {
+    let player = spell.GetCaster().ToPlayer();
+    if (player) {
+      player.SendBroadcastMessage(`Hello from fireball!`);
+    }
+  });
 }
 ```
 
@@ -40,7 +39,7 @@ In TSWoW, we use a _tag_ system to propagate entity ids from datascripts and int
 
 If we look at the code we created for the spell in the previous tutorial, we can see that it has a field called `Tags`
 
-<img class="mi ili" src="https://i.imgur.com/d5TR4qD.png">
+<img class="mi ili" src="https://i.imgur.com/d5TR4qD.png" />
 
 This field itself has two important methods:
 
@@ -58,24 +57,17 @@ By attaching a tag to our datascript spell, we should end up with the following 
 ```ts
 import { std } from "wow/wotlk";
 
-const MY_SPELL = std.Spells
-    .create('my-mod','my-fireball',133)
-    .Name.enGB.set('My Custom Fireball')
-    .Effects.mod(0,x=>x
-        .PointsBase.set(1)
-    )
-    .Effects.addMod(x=>x
-        .Type.APPLY_AURA.set()
-        .Aura.MOD_DECREASE_SPEED.set()
-        .PercentBase.set(-42)
-    )
-    .Visual.modRefCopy(x=>x
-        .PrecastKit.modRefCopy(y=>y
-            .Animation.SPELL_CAST_OMNI.set()
-        )
-    )
-    // this is the code we add
-    .Tags.add('my-mod','custom-fireball-scripts')
+const MY_SPELL = std.Spells.create("my-mod", "my-fireball", 133)
+  .Name.enGB.set("My Custom Fireball")
+  .Effects.mod(0, (x) => x.PointsBase.set(1))
+  .Effects.addMod((x) =>
+    x.Type.APPLY_AURA.set().Aura.MOD_DECREASE_SPEED.set().PercentBase.set(-42)
+  )
+  .Visual.modRefCopy((x) =>
+    x.PrecastKit.modRefCopy((y) => y.Animation.SPELL_CAST_OMNI.set())
+  )
+  // this is the code we add
+  .Tags.add("my-mod", "custom-fireball-scripts");
 ```
 
 Once we've done this, it's important that we `build data` once to let the build system know about the tag we just created.
@@ -91,15 +83,13 @@ Putting all of this together, we can create a new livescript that hooks our own 
 
 ```ts
 export function Main(events: TSEvents) {
-    events.Spell.OnCast(TAG("my-mod","custom-fireball-scripts")
-        , (spell)=>{
-            let player = spell.GetCaster().ToPlayer();
-            if(!player.IsNull())
-            {
-                player.SendBroadcastMessage(`Hello from custom fireball!`)
-            }
-        })
+  events.Spell.OnCast(TAG("my-mod", "custom-fireball-scripts"), (spell) => {
+    let player = spell.GetCaster().ToPlayer();
+    if (!player.IsNull()) {
+      player.SendBroadcastMessage(`Hello from custom fireball!`);
+    }
+  });
 }
 ```
 
-<img class="mi ili" src="https://i.imgur.com/YPPGpB2.png">
+<img class="mi ili" src="https://i.imgur.com/YPPGpB2.png" />

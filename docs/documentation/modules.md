@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Modules
-nav_order: 100
+nav_order: 1
 ---
 
 # Modules
@@ -14,29 +14,31 @@ Modules should follow the form `creator-modulename`, optionally with multiple da
 
 Examples of **good** module names:
 
-* `yourusername-testmodule`
+- `yourusername-testmodule`
 
-* `yourusername-test-module`
+- `yourusername-test-module`
 
 Examples of **bad** module names:
 
-* `my-samplemodule` _<-- use a unique username_
+- `my-samplemodule` _< -- use a unique username_
 
-* `yourusernamemodule`  _<-- use a dash (-) to separate your name from the module_
+- `yourusernamemodule` _< -- use a dash (-) to separate your name from the module_
 
-* `my_module`  _<-- Use a dash (-) instead of underscore._
+- `my_module` _< -- Use a dash (-) instead of underscore._
 
 ## Endpoints
 
 A module can contain a set of special folders called _endpoints_ that serve a specific purpose. Unless tswow is started with the `nowatch` flag, you can simply create one of these folders in your module and tswow will populate it with appropriate boilerplate and configurations automatically.
 
 ### Simple Endpoints
+
 - _datascripts_ - Contains all datascripts for this module. Written using TypeScript.
 - _livescripts_ - Contains all livescripts for this module. Written using TypeScript or C++
 - _addon_ - Contains all addon files related to this module. Written using TypeScript or lua.
 - _assets_ - Contains asset files (blps, adts, m2s, wmo, mp3, wav) or build files (png, psd)
 
 ### Advanced Endpoints
+
 - _realms_ - Contains realms specified by this module. Allows modules to contain realm configurations.
 - _datasets_ - Contains datasets specified by this module. Allows modules to contain id configurations, build settings and source data.
 
@@ -53,6 +55,7 @@ Modules can contain other modules, called submodules. Any folder inside a module
 - Submodules are completely separate from their parents and vice-versa, just as root-level modules are. They cannot locally include each others datascript files, and their livescript/addon projects are completely separate.
 
 Example directory structure using a basic submodule:
+
 ```
 └── tswow-install/
     └── modules/
@@ -78,7 +81,7 @@ There are two sets of instructions depending on if your remote repository contai
 - Check the name of the default branch on this repository, such as `master` or `main`.
 - Navigate to your module with a terminal and initialize a new git repository: `git init`
 - Type the command: `git remote add origin url-to-your-git-repository`
-    - GitHub Example: `git remote add origin https://github.com/myusername/myrepo.git`
+  - GitHub Example: `git remote add origin https://github.com/myusername/myrepo.git`
 - Check the name of the default branch in your remote repository, such as `master` or `main`.
 - Type the command: `git pull origin default-branch-name`
 
@@ -87,7 +90,7 @@ There are two sets of instructions depending on if your remote repository contai
 - Create a remote repository somewhere, such as [GitHub](https://github.com/) or [GitLab](https://gitlab.com/). **Make sure you add NO default files for this workflow to work**
 - Navigate to your module with a terminal and initialize a new git repository: `git init`
 - Type the command `git remote add origin url-to-your-git-repository`
-    - GitHub Example: `git remote add origin https://github.com/myusername/myrepo.git`
+  - GitHub Example: `git remote add origin https://github.com/myusername/myrepo.git`
 - Commit your local files
 - Check the name of the default branch in your local repository, such as `master` or `main`
 - Push your branch to the remote: `git push -u origin default-branch-name`
